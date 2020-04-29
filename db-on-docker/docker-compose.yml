@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+  mysql-dev:
+    image: mysql:8.0.2
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: clarissDev
+
+    ports:
+    - "3306:3306"
+
+    volumes:
+    - "./data:/var/lib/mysql:rw"
