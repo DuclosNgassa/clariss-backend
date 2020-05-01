@@ -22,7 +22,7 @@ public class PerformanceController {
     @Autowired
     PerformanceService performanceService;
 
-    @PostMapping("/create")
+    @PostMapping()
     public ResponseEntity<Performance> create(@Valid @RequestBody Performance performance) throws Exception {
         Performance createdPerformance = performanceService.save(performance);
 

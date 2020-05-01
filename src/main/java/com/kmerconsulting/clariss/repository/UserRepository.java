@@ -8,4 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserRepository extends JpaRepository<User, Long> {
     Optional<List<User>> findByStatus(GlobalStatus status);
+
+    User findByEmail(String email);
 }

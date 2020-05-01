@@ -38,6 +38,8 @@ public class UserController {
     public ResponseEntity<UserDTO> create(@Valid @RequestBody User user) throws Exception {
         user.setCreatedAt(LocalDateTime.now());
         user.setRole(UserRole.user);
+        user.setPassword("TEMP_PASSWORD");
+        user.setStatus(GlobalStatus.active);
         User createdUser = userService.save(user);
 
         if (createdUser == null) {
@@ -82,6 +84,18 @@ public class UserController {
     @GetMapping("/{id}")
     public ResponseEntity<UserDTO> findById(@PathVariable(value = "id") Long id) {
         User user = userService.findById(id);
+        if (user == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        UserDTO userDTO = userMapper.mapToBasisDTO(user);
+
+        return ResponseEntity.ok(userDTO);
+    }
+
+    @GetMapping("/email/{email}/")
+    public ResponseEntity<UserDTO> findByEmail(@PathVariable(value = "email") String email) {
+        User user = userService.findByEmail(email);
         if (user == null) {
             return ResponseEntity.notFound().build();
         }

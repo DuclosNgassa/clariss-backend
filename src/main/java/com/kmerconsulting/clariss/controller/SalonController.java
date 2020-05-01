@@ -1,10 +1,22 @@
 package com.kmerconsulting.clariss.controller;
 
 import com.kmerconsulting.clariss.model.GlobalStatus;
+import com.kmerconsulting.clariss.model.ManagerSalon;
+import com.kmerconsulting.clariss.model.Performance;
 import com.kmerconsulting.clariss.model.Salon;
+import com.kmerconsulting.clariss.model.User;
+import com.kmerconsulting.clariss.model.UserRole;
+import com.kmerconsulting.clariss.service.ManagerSalonService;
+import com.kmerconsulting.clariss.service.PerformanceService;
 import com.kmerconsulting.clariss.service.SalonService;
+import com.kmerconsulting.clariss.service.UserService;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -22,16 +34,37 @@ import org.springframework.web.bind.annotation.RestController;
 public class SalonController {
     @Autowired
     SalonService salonService;
+    @Autowired
+    UserService userService;
+    @Autowired
+    ManagerSalonService managerSalonService;
+    @Autowired
+    PerformanceService performanceService;
 
-    @PostMapping()
-    public ResponseEntity<Salon> create(@Valid @RequestBody Salon salon) throws Exception {
-        salon.setCreatedAt(LocalDateTime.now());
-        salon.setViews(0);
-        Salon createdSalon = salonService.save(salon);
-        if(createdSalon == null){
-            throw new Exception("Error while saving salon");
+    @PostMapping("/user/{userId}")
+    public ResponseEntity<Salon> create(@Valid @RequestBody Salon salon, @PathVariable(value = "userId") Long userId) throws Exception {
+        if (isUserManager(userId)) {
+            salon.setCreatedAt(LocalDateTime.now());
+            salon.setViews(0);
+            Salon createdSalon = salonService.save(salon);
+            if (createdSalon == null) {
+                throw new Exception("Error while saving salon");
+            }
+
+            saveManagerSalon(userId, createdSalon.getId());
+
+            return ResponseEntity.ok(createdSalon);
         }
-        return ResponseEntity.ok(createdSalon);
+        throw new Exception("The user with the id " + userId + "is not a manager");
+    }
+
+    private void saveManagerSalon(@PathVariable("userId") Long userId, Long salonId) {
+        ManagerSalon managerSalon = new ManagerSalon();
+        managerSalon.setCreatedAt(LocalDateTime.now());
+        managerSalon.setUserId(userId);
+        managerSalon.setSalonId(salonId);
+
+        managerSalonService.save(managerSalon);
     }
 
     /**
@@ -78,6 +111,42 @@ public class SalonController {
         return ResponseEntity.ok(salones);
     }
 
+    @GetMapping("/manager/{managerId}")
+    public ResponseEntity<List<Salon>> findByManagerId(@PathVariable(value = "managerId") Long managerId) {
+        List<ManagerSalon> managerSalons = managerSalonService.findByUserId(managerId);
+        if (managerSalons == null) {
+            return ResponseEntity.notFound().build();
+        }
+        List<Salon> salons = new ArrayList<>();
+        managerSalons.stream().forEach((managerSalon) ->{
+            Salon salon = salonService.findById(managerSalon.getSalonId());
+            salons.add(salon);
+        });
+
+        return ResponseEntity.ok(salons);
+    }
+
+    @GetMapping("/performanceUndercategory/{performanceUndercategory}")
+    public ResponseEntity<List<Salon>> findByPerformanceUndercategory(@PathVariable(value = "performanceUndercategory") Long performanceUndercategory) {
+        List<Performance> performances = performanceService.findByPerformanceUndercategoryId(performanceUndercategory);
+
+        List<Salon> salons = salonService.findAll();
+
+        final Set<Salon> selectedSalons = new HashSet<>();
+
+        if(performances != null){
+            performances.forEach((performance) ->{
+                Optional<Salon> salonOptional = salons.stream().filter((salonItem) -> salonItem.getId() == performance.getSalonId()).findFirst();
+                if(salonOptional.isPresent()){
+                    selectedSalons.add(salonOptional.get());
+                }
+            });
+        }
+
+        return ResponseEntity.ok(selectedSalons.stream().collect(Collectors.toList()));
+
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<Salon> findById(@PathVariable(value = "id") Long id) {
         Salon salon = salonService.findById(id);
@@ -104,6 +173,11 @@ public class SalonController {
         salonService.delete(id);
 
         return ResponseEntity.ok(salon);
+    }
+
+    private boolean isUserManager(Long userId) {
+        User user = userService.findById(userId);
+        return user != null && user.getRole() == UserRole.manager;
     }
 
 }
