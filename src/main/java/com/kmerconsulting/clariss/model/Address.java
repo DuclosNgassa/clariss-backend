@@ -8,10 +8,6 @@ import javax.persistence.Id;
 
 @Entity
 public class Address {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", updatable = false, nullable = false)
-    private Long id;
     @Column(length = 50, nullable = false)
     String city;
     @Column(length = 50, nullable = false)
@@ -22,6 +18,10 @@ public class Address {
     String street;
     @Column(length = 10)
     String housnumber;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id", updatable = false, nullable = false)
+    private Long id;
 
     public Long getId() {
         return id;

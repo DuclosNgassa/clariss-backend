@@ -8,14 +8,14 @@ import javax.persistence.Id;
 
 @Entity
 public class BookingPerformance {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", updatable = false, nullable = false)
-    private Long id;
     @Column(nullable = false)
     Long performanceId;
     @Column(nullable = false)
     Long bookingId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id", updatable = false, nullable = false)
+    private Long id;
 
     public Long getId() {
         return id;

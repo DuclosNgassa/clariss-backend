@@ -7,7 +7,7 @@ import javax.persistence.Entity;
 import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
-public class Booking extends BasisEntity{
+public class Booking extends BasisEntity {
     @Column(nullable = false)
     @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
     @JsonFormat(pattern = "YYYY-MM-dd HH:mm")

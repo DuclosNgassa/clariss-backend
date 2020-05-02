@@ -4,10 +4,12 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.validation.constraints.Digits;
 
 @Entity
 public class Salon extends BasisEntity {
+    @Column(precision = 2, scale = 1)
+    //@Digits(integer = 2 /*precision*/, fraction = 1 /*scale*/)
+            double rating;
     @Column(nullable = false, length = 100)
     private String name;
     @Column(nullable = false, length = 255)
@@ -23,9 +25,6 @@ public class Salon extends BasisEntity {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private GlobalStatus status;
-    @Column(precision = 2, scale = 1)
-    //@Digits(integer = 2 /*precision*/, fraction = 1 /*scale*/)
-    double rating;
 
     public String getName() {
         return name;

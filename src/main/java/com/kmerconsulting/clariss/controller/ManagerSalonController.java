@@ -23,10 +23,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/managerSalon")
 public class ManagerSalonController {
     @Autowired
-    private UserService userService;
-
-    @Autowired
     ManagerSalonService managerSalonService;
+    @Autowired
+    private UserService userService;
 
     @PostMapping("/create")
     public ResponseEntity<ManagerSalon> create(@Valid @RequestBody ManagerSalon managerSalon) throws Exception {

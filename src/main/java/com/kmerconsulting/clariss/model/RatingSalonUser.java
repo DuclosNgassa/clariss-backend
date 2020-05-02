@@ -6,7 +6,7 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 
 @Entity
-public class RatingSalonUser extends BasisEntity{
+public class RatingSalonUser extends BasisEntity {
     @Column(nullable = false)
     Integer score;
     @Column(nullable = false)

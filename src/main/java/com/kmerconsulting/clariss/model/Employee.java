@@ -5,6 +5,10 @@ import javax.persistence.Entity;
 
 @Entity
 public class Employee extends BasisEntity {
+    @Column(nullable = false)
+    Long salonId;
+    @Column(precision = 2, scale = 1)
+    double rating;
     @Column(length = 45, nullable = false)
     private String name;
     @Column(length = 255, nullable = false)
@@ -13,11 +17,6 @@ public class Employee extends BasisEntity {
     private String description;
     @Column(length = 255)
     private String picture;
-    @Column(nullable = false)
-    Long salonId;
-    @Column(precision = 2, scale = 1)
-    double rating;
-
 
     public String getName() {
         return name;

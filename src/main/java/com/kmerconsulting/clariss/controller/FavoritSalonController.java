@@ -2,7 +2,6 @@ package com.kmerconsulting.clariss.controller;
 
 import com.kmerconsulting.clariss.model.FavoritSalon;
 import com.kmerconsulting.clariss.service.FavoritSalonService;
-import java.time.LocalDateTime;
 import java.util.List;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

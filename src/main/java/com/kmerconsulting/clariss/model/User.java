@@ -4,10 +4,18 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.validation.constraints.Digits;
 
 @Entity
-public class User extends BasisEntity{
+public class User extends BasisEntity {
+    @Column(nullable = false)
+    Long addressId;
+    @Column(nullable = false)
+    String deviceToken;
+    @Column(nullable = false)
+    String deviceId;
+    @Column(precision = 2, scale = 1)
+    //@Digits(integer = 2 /*precision*/, fraction = 1 /*scale*/)
+            double rating;
     @Column(length = 45, nullable = false)
     private String name;
     @Column(nullable = false)
@@ -17,20 +25,11 @@ public class User extends BasisEntity{
     @Column(length = 45, nullable = false)
     private String phone;
     @Column(nullable = false)
-    Long addressId;
-    @Column(nullable = false)
-    String deviceToken;
-    @Column(nullable = false)
-    String deviceId;
-    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private GlobalStatus status;
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private UserRole role;
-    @Column(precision = 2, scale = 1)
-    //@Digits(integer = 2 /*precision*/, fraction = 1 /*scale*/)
-    double rating;
 
     public String getName() {
         return name;

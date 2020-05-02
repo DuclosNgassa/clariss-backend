@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 public class PerformanceCategoryService {
     @Autowired
     PerformanceCategoryRepository performanceCategoryRepository;
-    
+
     public PerformanceCategory save(PerformanceCategory performanceCategory) {
         return performanceCategoryRepository.save(performanceCategory);
     }

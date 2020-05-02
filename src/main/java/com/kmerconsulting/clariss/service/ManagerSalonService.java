@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 public class ManagerSalonService {
     @Autowired
     ManagerSalonRepository managerSalonRepository;
-    
+
     public ManagerSalon save(ManagerSalon managerSalon) {
         return managerSalonRepository.save(managerSalon);
     }

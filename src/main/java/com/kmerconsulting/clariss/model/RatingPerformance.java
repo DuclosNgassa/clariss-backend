@@ -4,7 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 
 @Entity
-public class RatingPerformance extends BasisEntity{
+public class RatingPerformance extends BasisEntity {
     @Column(nullable = false)
     Integer score;
     @Column(nullable = false)

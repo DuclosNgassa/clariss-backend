@@ -8,10 +8,6 @@ import javax.persistence.Id;
 
 @Entity
 public class Performance {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", updatable = false, nullable = false)
-    private Long id;
     @Column(length = 255, nullable = false)
     String name;
     @Column(length = 300, nullable = false)
@@ -30,6 +26,10 @@ public class Performance {
     Long performanceUndercategoryId;
     @Column(precision = 2, scale = 1)
     double rating;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id", updatable = false, nullable = false)
+    private Long id;
 
     public Long getId() {
         return id;

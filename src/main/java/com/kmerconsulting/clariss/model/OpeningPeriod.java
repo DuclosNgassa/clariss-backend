@@ -12,7 +12,7 @@ import javax.persistence.Id;
 import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
-public class OpeningPeriod{
+public class OpeningPeriod {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", updatable = false, nullable = false)

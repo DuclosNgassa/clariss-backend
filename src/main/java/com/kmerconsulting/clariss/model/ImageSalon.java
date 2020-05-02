@@ -8,14 +8,14 @@ import javax.persistence.Id;
 
 @Entity
 public class ImageSalon {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", updatable = false, nullable = false)
-    private Long id;
     @Column(length = 255, nullable = false)
     String imageUrl;
     @Column(nullable = false)
     Long salonId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id", updatable = false, nullable = false)
+    private Long id;
 
     public Long getId() {
         return id;

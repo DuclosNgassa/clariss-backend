@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 public class BookingPerformanceService {
     @Autowired
     BookingPerformanceRepository bookingPerformanceRepository;
-    
+
     public BookingPerformance save(BookingPerformance bookingPerformance) {
         return bookingPerformanceRepository.save(bookingPerformance);
     }

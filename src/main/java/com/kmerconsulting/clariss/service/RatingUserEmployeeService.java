@@ -2,7 +2,6 @@ package com.kmerconsulting.clariss.service;
 
 import com.kmerconsulting.clariss.model.RatingAuthor;
 import com.kmerconsulting.clariss.model.RatingUserEmployee;
-import com.kmerconsulting.clariss.repository.RatingSalonUserRepository;
 import com.kmerconsulting.clariss.repository.RatingUserEmployeeRepository;
 import java.util.List;
 import javax.persistence.EntityNotFoundException;
@@ -13,7 +12,7 @@ import org.springframework.stereotype.Service;
 public class RatingUserEmployeeService {
     @Autowired
     RatingUserEmployeeRepository ratingUserEmployeeRepository;
-    
+
     public RatingUserEmployee save(RatingUserEmployee ratingUserEmployee) {
         return ratingUserEmployeeRepository.save(ratingUserEmployee);
     }
@@ -37,6 +36,7 @@ public class RatingUserEmployeeService {
     public List<RatingUserEmployee> findByEmployeeId(Long employeeId) {
         return ratingUserEmployeeRepository.findByEmployeeId(employeeId);
     }
+
     public List<RatingUserEmployee> findByAuthor(RatingAuthor author) {
         return ratingUserEmployeeRepository.findByAuthor(author);
     }

@@ -24,7 +24,7 @@ public class BookingPerformanceController {
     @PostMapping()
     public ResponseEntity<BookingPerformance> create(@Valid @RequestBody BookingPerformance bookingPerformance) throws Exception {
         BookingPerformance createdBookingPerformance = bookingPerformanceService.save(bookingPerformance);
-        if(createdBookingPerformance == null){
+        if (createdBookingPerformance == null) {
             throw new Exception("Error while saving bookingPerformance");
         }
         return ResponseEntity.ok(createdBookingPerformance);
@@ -89,7 +89,7 @@ public class BookingPerformanceController {
     }
 
     @GetMapping("/performanceId/{performanceId}")
-    public ResponseEntity<List<BookingPerformance>>  findByPerformanceId(Long performanceId) {
+    public ResponseEntity<List<BookingPerformance>> findByPerformanceId(Long performanceId) {
         List<BookingPerformance> bookingPerformancees = bookingPerformanceService.findByPerformanceId(performanceId);
         if (bookingPerformancees == null) {
             return ResponseEntity.notFound().build();

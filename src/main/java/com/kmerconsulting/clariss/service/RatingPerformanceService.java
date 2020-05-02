@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 public class RatingPerformanceService {
     @Autowired
     RatingPerformanceRepository ratingPerformanceRepository;
-    
+
     public RatingPerformance save(RatingPerformance ratingPerformance) {
         return ratingPerformanceRepository.save(ratingPerformance);
     }

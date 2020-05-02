@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 public class RatingSalonUserService {
     @Autowired
     RatingSalonUserRepository ratingSalonRepository;
-    
+
     public RatingSalonUser save(RatingSalonUser ratingSalon) {
         return ratingSalonRepository.save(ratingSalon);
     }
@@ -36,6 +36,7 @@ public class RatingSalonUserService {
     public List<RatingSalonUser> findBySalonId(Long salonId) {
         return ratingSalonRepository.findBySalonId(salonId);
     }
+
     public List<RatingSalonUser> findByAuthor(RatingAuthor author) {
         return ratingSalonRepository.findByAuthor(author);
     }

@@ -7,8 +7,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserRoleMapper {
 
-    public UserRoleDTO mapUserRoleToDTO(UserRole userRole){
-        switch (userRole){
+    public UserRoleDTO mapUserRoleToDTO(UserRole userRole) {
+        switch (userRole) {
             case admin:
                 return buildUserRoleDTO("admin");
             case manager:
@@ -19,8 +19,8 @@ public class UserRoleMapper {
         }
     }
 
-    public UserRole mapDTOToUserRole(UserRoleDTO userRoleDTO){
-        switch (userRoleDTO.getRole()){
+    public UserRole mapDTOToUserRole(UserRoleDTO userRoleDTO) {
+        switch (userRoleDTO.getRole()) {
             case "admin":
                 return UserRole.admin;
             case "manager":
@@ -31,7 +31,7 @@ public class UserRoleMapper {
         }
     }
 
-    UserRoleDTO buildUserRoleDTO(String role){
+    UserRoleDTO buildUserRoleDTO(String role) {
         UserRoleDTO userRoleDTO = new UserRoleDTO();
         userRoleDTO.setRole(role);
         return userRoleDTO;

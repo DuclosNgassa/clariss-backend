@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 public class FavoritSalonService {
     @Autowired
     FavoritSalonRepository favoritSalonRepository;
-    
+
     public FavoritSalon save(FavoritSalon favoritSalon) {
         return favoritSalonRepository.save(favoritSalon);
     }

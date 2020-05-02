@@ -24,7 +24,7 @@ public class AddressController {
     @PostMapping()
     public ResponseEntity<Address> create(@Valid @RequestBody Address address) throws Exception {
         Address createdAddress = addressService.save(address);
-        if(createdAddress == null){
+        if (createdAddress == null) {
             throw new Exception("Error while saving address");
         }
         return ResponseEntity.ok(createdAddress);

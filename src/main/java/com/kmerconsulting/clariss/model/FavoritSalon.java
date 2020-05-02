@@ -8,14 +8,14 @@ import javax.persistence.Id;
 
 @Entity
 public class FavoritSalon {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", updatable = false, nullable = false)
-    private Long id;
     @Column(nullable = false)
     Long userId;
     @Column(nullable = false)
     Long salonId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id", updatable = false, nullable = false)
+    private Long id;
 
     public Long getUserId() {
         return userId;

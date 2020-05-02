@@ -118,7 +118,7 @@ public class SalonController {
             return ResponseEntity.notFound().build();
         }
         List<Salon> salons = new ArrayList<>();
-        managerSalons.stream().forEach((managerSalon) ->{
+        managerSalons.stream().forEach((managerSalon) -> {
             Salon salon = salonService.findById(managerSalon.getSalonId());
             salons.add(salon);
         });
@@ -134,10 +134,10 @@ public class SalonController {
 
         final Set<Salon> selectedSalons = new HashSet<>();
 
-        if(performances != null){
-            performances.forEach((performance) ->{
+        if (performances != null) {
+            performances.forEach((performance) -> {
                 Optional<Salon> salonOptional = salons.stream().filter((salonItem) -> salonItem.getId() == performance.getSalonId()).findFirst();
-                if(salonOptional.isPresent()){
+                if (salonOptional.isPresent()) {
                     selectedSalons.add(salonOptional.get());
                 }
             });
