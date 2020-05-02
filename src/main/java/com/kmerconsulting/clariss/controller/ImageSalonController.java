@@ -3,7 +3,6 @@ package com.kmerconsulting.clariss.controller;
 import com.kmerconsulting.clariss.model.ImageSalon;
 import com.kmerconsulting.clariss.service.ImageSalonService;
 import java.util.List;
-import java.util.logging.Logger;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

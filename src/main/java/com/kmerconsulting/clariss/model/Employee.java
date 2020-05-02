@@ -2,25 +2,17 @@ package com.kmerconsulting.clariss.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.validation.constraints.Digits;
 
 @Entity
-public class Employee {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", updatable = false, nullable = false)
-    private Long id;
+public class Employee extends BasisEntity {
     @Column(length = 45, nullable = false)
     private String name;
     @Column(length = 255, nullable = false)
-    private String function;
+    private String position;
     @Column(length = 300)
     private String description;
     @Column(length = 255)
-    private String imageProfilUrl;
+    private String picture;
     @Column(nullable = false)
     Long salonId;
     @Column(precision = 2, scale = 1)
@@ -35,12 +27,12 @@ public class Employee {
         this.name = name;
     }
 
-    public String getFunction() {
-        return function;
+    public String getPosition() {
+        return position;
     }
 
-    public void setFunction(String function) {
-        this.function = function;
+    public void setPosition(String position) {
+        this.position = position;
     }
 
     public String getDescription() {
@@ -51,12 +43,12 @@ public class Employee {
         this.description = description;
     }
 
-    public String getImageProfilUrl() {
-        return imageProfilUrl;
+    public String getPicture() {
+        return picture;
     }
 
-    public void setImageProfilUrl(String imageProfilUrl) {
-        this.imageProfilUrl = imageProfilUrl;
+    public void setPicture(String picture) {
+        this.picture = picture;
     }
 
     public Long getSalonId() {

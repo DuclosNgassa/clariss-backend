@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/employee")
@@ -23,8 +25,9 @@ public class EmployeeController {
     @Autowired
     EmployeeService employeeService;
 
-    @PostMapping("/create")
+    @PostMapping()
     public ResponseEntity<Employee> create(@Valid @RequestBody Employee employee) throws Exception {
+        employee.setCreatedAt(LocalDateTime.now());
         Employee createdEmployee = employeeService.save(employee);
 
         if (createdEmployee == null) {
@@ -33,6 +36,20 @@ public class EmployeeController {
 
         return ResponseEntity.ok(createdEmployee);
     }
+
+    @PostMapping("/uploadProfilPicture")
+    public ResponseEntity<String> uploadImage(@RequestParam("profilPicture") MultipartFile profilPicture) {
+        String profilPictureUrl = "";
+        try {
+            profilPictureUrl = employeeService.saveProfilPicture(profilPicture);
+        } catch (Exception e) {
+            e.printStackTrace();
+            //TODO log error
+            profilPictureUrl = "error";
+        }
+        return ResponseEntity.ok(profilPictureUrl);
+    }
+
 
     @GetMapping()
     public ResponseEntity<List<Employee>> findAll() {
@@ -80,9 +97,9 @@ public class EmployeeController {
         }
 
         employee.setName(employeeDetail.getName());
-        employee.setFunction(employeeDetail.getFunction());
+        employee.setPosition(employeeDetail.getPosition());
         employee.setDescription(employeeDetail.getDescription());
-        employee.setImageProfilUrl(employeeDetail.getImageProfilUrl());
+        employee.setPicture(employeeDetail.getPicture());
         employee.setSalonId(employeeDetail.getSalonId());
 
         Employee updatedEmployee = employeeService.update(employee);
