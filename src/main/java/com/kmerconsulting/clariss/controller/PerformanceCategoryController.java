@@ -22,7 +22,7 @@ public class PerformanceCategoryController {
     @Autowired
     PerformanceCategoryService performanceCategoryService;
 
-    @PostMapping("/create")
+    @PostMapping()
     public ResponseEntity<PerformanceCategory> create(@Valid @RequestBody PerformanceCategory performanceCategory) throws Exception {
         PerformanceCategory createdPerformanceCategory = performanceCategoryService.save(performanceCategory);
 
