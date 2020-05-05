@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class EmployeeService {
     @Autowired
     EmployeeRepository employeeRepository;
+    public static String uploadDirectory = System.getProperty("user.dir") + "/upload/employeeProfilPicture";
 
     public Employee save(Employee employee) {
         return employeeRepository.save(employee);
@@ -41,9 +42,8 @@ public class EmployeeService {
     }
 
     public String saveProfilPicture(MultipartFile profilPicture) throws Exception {
-        String folder = "src/main/resources/static/employeeProfilPicture/";
         byte[] bytes = profilPicture.getBytes();
-        Path path = Paths.get(folder + profilPicture.getOriginalFilename());
+        Path path = Paths.get(uploadDirectory, profilPicture.getOriginalFilename());
         Files.write(path, bytes);
         return profilPicture.getOriginalFilename();
     }

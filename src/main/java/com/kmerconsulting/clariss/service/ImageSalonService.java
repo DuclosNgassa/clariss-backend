@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class ImageSalonService {
     @Autowired
     ImageSalonRepository imageSalonRepository;
+    public static String uploadDirectory = System.getProperty("user.dir") + "/upload/imagesSalon";
 
     public ImageSalon save(ImageSalon imageSalon) {
         return imageSalonRepository.save(imageSalon);
@@ -45,9 +46,9 @@ public class ImageSalonService {
     }
 
     public String saveImage(MultipartFile imageFile) throws Exception {
-        String folder = "src/main/resources/static/imagesSalon/";
+        //String folder = "src/main/resources/static/imagesSalon/";
         byte[] bytes = imageFile.getBytes();
-        Path path = Paths.get(folder + imageFile.getOriginalFilename());
+        Path path = Paths.get(uploadDirectory, imageFile.getOriginalFilename());
         Files.write(path, bytes);
         return imageFile.getOriginalFilename();
     }
