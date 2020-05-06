@@ -26,7 +26,7 @@ public class ImageSalonController {
     ImageSalonService imageSalonService;
 
     @PostMapping()
-    public ResponseEntity<ImageSalon> create(@Valid @RequestBody ImageSalon imageSalon) throws Exception {
+    public ResponseEntity<ImageSalon> save(@Valid @RequestBody ImageSalon imageSalon) throws Exception {
         ImageSalon createdImageSalon = imageSalonService.save(imageSalon);
 
         if (createdImageSalon == null) {

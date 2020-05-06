@@ -1,8 +1,10 @@
 package com.kmerconsulting.clariss.controller;
 
+import com.kmerconsulting.clariss.model.GlobalStatus;
 import com.kmerconsulting.clariss.model.Performance;
 import com.kmerconsulting.clariss.service.PerformanceService;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +25,8 @@ public class PerformanceController {
     PerformanceService performanceService;
 
     @PostMapping()
-    public ResponseEntity<Performance> create(@Valid @RequestBody Performance performance) throws Exception {
+    public ResponseEntity<Performance> save(@Valid @RequestBody Performance performance) throws Exception {
+        performance.setStatus(GlobalStatus.active);
         Performance createdPerformance = performanceService.save(performance);
 
         if (createdPerformance == null) {
@@ -44,6 +47,21 @@ public class PerformanceController {
         return ResponseEntity.ok(performances);
     }
 
+    @GetMapping("/active")
+    public ResponseEntity<List<Performance>> findAllActive() {
+        List<Performance> performances = performanceService.findByStatus(GlobalStatus.active);
+
+        if (performances == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(performances);
+    }
+
+    private boolean isActive(Performance performance) {
+        return performance.getStatus() == GlobalStatus.active;
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<Performance> findById(@PathVariable(value = "id") Long id) {
         Performance performance = performanceService.findById(id);
@@ -61,7 +79,8 @@ public class PerformanceController {
             return ResponseEntity.notFound().build();
         }
 
-        return ResponseEntity.ok(performances);
+        List<Performance> performancesActive = performances.stream().filter(this::isActive).collect(Collectors.toList());
+        return ResponseEntity.ok(performancesActive);
     }
 
     @GetMapping("/salon/{salonId}")
@@ -70,8 +89,8 @@ public class PerformanceController {
         if (performances == null) {
             return ResponseEntity.notFound().build();
         }
-
-        return ResponseEntity.ok(performances);
+        List<Performance> performancesActive = performances.stream().filter(this::isActive).collect(Collectors.toList());
+        return ResponseEntity.ok(performancesActive);
     }
 
     /**
@@ -84,7 +103,7 @@ public class PerformanceController {
     @PutMapping("/{id}")
     public ResponseEntity<Performance> update(@PathVariable(value = "id") Long id, @Valid @RequestBody Performance performanceDetail) {
         Performance performance = performanceService.findById(id);
-        if (performance == null) {
+        if (performance == null || !isActive(performance)) {
             return ResponseEntity.notFound().build();
         }
 
@@ -96,7 +115,6 @@ public class PerformanceController {
         performance.setPerformanceUndercategoryId(performanceDetail.getPerformanceUndercategoryId());
         performance.setPromoPrice(performanceDetail.getPromoPrice());
         performance.setSalonId(performanceDetail.getSalonId());
-        performance.setRating(performanceDetail.getRating());
 
         Performance updatedPerformance = performanceService.update(performance);
 
@@ -104,7 +122,7 @@ public class PerformanceController {
     }
 
     /**
-     * This method deletes a performance based on his id
+     * This method deletes (sets status to deleted) a performance based on his id
      *
      * @param id
      * @return
@@ -112,10 +130,11 @@ public class PerformanceController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Performance> delete(@PathVariable(value = "id") Long id) {
         Performance performance = performanceService.findById(id);
-        if (performance == null) {
+        if (performance == null || !isActive(performance)) {
             return ResponseEntity.notFound().build();
         }
-        performanceService.delete(id);
+        performance.setStatus(GlobalStatus.deleted);
+        performanceService.update(performance);
 
         return ResponseEntity.ok(performance);
     }

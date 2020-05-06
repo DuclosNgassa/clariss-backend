@@ -1,6 +1,8 @@
 package com.kmerconsulting.clariss.service;
 
+import com.kmerconsulting.clariss.model.GlobalStatus;
 import com.kmerconsulting.clariss.model.Performance;
+import com.kmerconsulting.clariss.model.User;
 import com.kmerconsulting.clariss.repository.PerformanceRepository;
 import java.util.List;
 import javax.persistence.EntityNotFoundException;
@@ -22,6 +24,10 @@ public class PerformanceService {
 
     public List<Performance> findAll() {
         return performanceRepository.findAll();
+    }
+
+    public List<Performance> findByStatus(GlobalStatus status) {
+        return performanceRepository.findByStatus(status).orElse(null);
     }
 
     public Performance findById(Long id) {

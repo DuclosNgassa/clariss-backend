@@ -27,8 +27,8 @@ public class ManagerSalonController {
     @Autowired
     private UserService userService;
 
-    @PostMapping("/create")
-    public ResponseEntity<ManagerSalon> create(@Valid @RequestBody ManagerSalon managerSalon) throws Exception {
+    @PostMapping()
+    public ResponseEntity<ManagerSalon> save(@Valid @RequestBody ManagerSalon managerSalon) throws Exception {
 
         if (isUserManager(managerSalon.getUserId())) {
             managerSalon.setCreatedAt(LocalDateTime.now());

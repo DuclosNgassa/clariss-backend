@@ -22,8 +22,8 @@ public class PerformanceUndercategoryController {
     @Autowired
     PerformanceUndercategoryService performanceUndercategoryService;
 
-    @PostMapping("/create")
-    public ResponseEntity<PerformanceUndercategory> create(@Valid @RequestBody PerformanceUndercategory performanceUndercategory) throws Exception {
+    @PostMapping()
+    public ResponseEntity<PerformanceUndercategory> save(@Valid @RequestBody PerformanceUndercategory performanceUndercategory) throws Exception {
         PerformanceUndercategory createdPerformanceUndercategory = performanceUndercategoryService.save(performanceUndercategory);
 
         if (createdPerformanceUndercategory == null) {

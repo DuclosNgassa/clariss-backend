@@ -22,8 +22,8 @@ public class OpeningPeriodController {
     @Autowired
     OpeningPeriodService openingPeriodService;
 
-    @PostMapping("/create")
-    public ResponseEntity<OpeningPeriod> create(@Valid @RequestBody OpeningPeriod openingPeriod) throws Exception {
+    @PostMapping()
+    public ResponseEntity<OpeningPeriod> save(@Valid @RequestBody OpeningPeriod openingPeriod) throws Exception {
         OpeningPeriod createdOpeningPeriod = openingPeriodService.save(openingPeriod);
 
         if (createdOpeningPeriod == null) {

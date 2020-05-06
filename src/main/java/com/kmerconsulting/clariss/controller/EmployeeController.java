@@ -26,7 +26,7 @@ public class EmployeeController {
     EmployeeService employeeService;
 
     @PostMapping()
-    public ResponseEntity<Employee> create(@Valid @RequestBody Employee employee) throws Exception {
+    public ResponseEntity<Employee> save(@Valid @RequestBody Employee employee) throws Exception {
         employee.setCreatedAt(LocalDateTime.now());
         Employee createdEmployee = employeeService.save(employee);
 

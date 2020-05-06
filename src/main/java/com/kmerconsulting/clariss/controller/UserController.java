@@ -35,7 +35,7 @@ public class UserController {
     UserRoleMapper userRoleMapper;
 
     @PostMapping("/signin")
-    public ResponseEntity<UserDTO> create(@Valid @RequestBody User user) throws Exception {
+    public ResponseEntity<UserDTO> save(@Valid @RequestBody User user) throws Exception {
         user.setCreatedAt(LocalDateTime.now());
         user.setRole(UserRole.user);
         user.setPassword("TEMP_PASSWORD");

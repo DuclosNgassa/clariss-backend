@@ -42,7 +42,7 @@ public class SalonController {
     PerformanceService performanceService;
 
     @PostMapping("/user/{userId}")
-    public ResponseEntity<Salon> create(@Valid @RequestBody Salon salon, @PathVariable(value = "userId") Long userId) throws Exception {
+    public ResponseEntity<Salon> save(@Valid @RequestBody Salon salon, @PathVariable(value = "userId") Long userId) throws Exception {
         if (isUserManager(userId)) {
             salon.setCreatedAt(LocalDateTime.now());
             salon.setViews(0);

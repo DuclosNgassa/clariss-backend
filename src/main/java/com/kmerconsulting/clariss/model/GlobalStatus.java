@@ -1,5 +1,5 @@
 package com.kmerconsulting.clariss.model;
 
 public enum GlobalStatus {
-    pending, active, blocked
+    pending, active, blocked, deleted
 }

@@ -15,7 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class EmployeeService {
     @Autowired
     EmployeeRepository employeeRepository;
-    public static String uploadDirectory = System.getProperty("user.dir") + "/upload/employeeProfilPicture";
+    private static String uploadDirectory = System.getProperty("user.dir") + "/upload/employeeProfilPicture";
 
     public Employee save(Employee employee) {
         return employeeRepository.save(employee);

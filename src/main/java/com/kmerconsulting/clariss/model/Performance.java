@@ -2,12 +2,18 @@ package com.kmerconsulting.clariss.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
 public class Performance {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id", updatable = false, nullable = false)
+    private Long id;
     @Column(length = 255, nullable = false)
     String name;
     @Column(length = 300, nullable = false)
@@ -26,10 +32,9 @@ public class Performance {
     Long performanceUndercategoryId;
     @Column(precision = 2, scale = 1)
     double rating;
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", updatable = false, nullable = false)
-    private Long id;
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private GlobalStatus status;
 
     public Long getId() {
         return id;
@@ -109,5 +114,13 @@ public class Performance {
 
     public void setRating(double rating) {
         this.rating = rating;
+    }
+
+    public GlobalStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(GlobalStatus status) {
+        this.status = status;
     }
 }

@@ -22,7 +22,7 @@ public class BookingPerformanceController {
     BookingPerformanceService bookingPerformanceService;
 
     @PostMapping()
-    public ResponseEntity<BookingPerformance> create(@Valid @RequestBody BookingPerformance bookingPerformance) throws Exception {
+    public ResponseEntity<BookingPerformance> save(@Valid @RequestBody BookingPerformance bookingPerformance) throws Exception {
         BookingPerformance createdBookingPerformance = bookingPerformanceService.save(bookingPerformance);
         if (createdBookingPerformance == null) {
             throw new Exception("Error while saving bookingPerformance");

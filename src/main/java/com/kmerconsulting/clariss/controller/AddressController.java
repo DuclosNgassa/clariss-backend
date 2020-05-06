@@ -22,7 +22,7 @@ public class AddressController {
     AddressService addressService;
 
     @PostMapping()
-    public ResponseEntity<Address> create(@Valid @RequestBody Address address) throws Exception {
+    public ResponseEntity<Address> save(@Valid @RequestBody Address address) throws Exception {
         Address createdAddress = addressService.save(address);
         if (createdAddress == null) {
             throw new Exception("Error while saving address");

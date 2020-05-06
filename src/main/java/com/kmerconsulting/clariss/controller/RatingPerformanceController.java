@@ -23,8 +23,8 @@ public class RatingPerformanceController {
     @Autowired
     RatingPerformanceService ratingPerformanceService;
 
-    @PostMapping("/create")
-    public ResponseEntity<RatingPerformance> create(@Valid @RequestBody RatingPerformance ratingPerformance) throws Exception {
+    @PostMapping()
+    public ResponseEntity<RatingPerformance> save(@Valid @RequestBody RatingPerformance ratingPerformance) throws Exception {
         ratingPerformance.setCreatedAt(LocalDateTime.now());
         RatingPerformance createdRatingPerformance = ratingPerformanceService.save(ratingPerformance);
 

@@ -22,8 +22,8 @@ public class FavoritSalonController {
     @Autowired
     FavoritSalonService favoritSalonService;
 
-    @PostMapping("/create")
-    public ResponseEntity<FavoritSalon> create(@Valid @RequestBody FavoritSalon favoritSalon) throws Exception {
+    @PostMapping()
+    public ResponseEntity<FavoritSalon> save(@Valid @RequestBody FavoritSalon favoritSalon) throws Exception {
         FavoritSalon createdFavoritSalon = favoritSalonService.save(favoritSalon);
 
         if (createdFavoritSalon == null) {

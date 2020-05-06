@@ -23,8 +23,8 @@ public class BookingController {
     @Autowired
     BookingService bookingService;
 
-    @PostMapping("/create")
-    public ResponseEntity<Booking> create(@Valid @RequestBody Booking booking) throws Exception {
+    @PostMapping()
+    public ResponseEntity<Booking> save(@Valid @RequestBody Booking booking) throws Exception {
         booking.setCreatedAt(LocalDateTime.now());
         Booking createdBooking = bookingService.save(booking);
 
