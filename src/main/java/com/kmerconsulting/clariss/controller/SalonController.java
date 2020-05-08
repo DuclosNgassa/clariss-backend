@@ -141,21 +141,21 @@ public class SalonController {
     public ResponseEntity<List<Salon>> findByPerformanceUndercategory(@PathVariable(value = "performanceUndercategory") Long performanceUndercategory) {
         List<Performance> performances = performanceService.findByPerformanceUndercategoryId(performanceUndercategory);
 
-        List<Salon> salons = salonService.findAll();
+        List<Salon> salons = salonService.findAllActive();
 
-        final Set<Salon> selectedSalons = new HashSet<>();
+        final Set<Salon> salonHashSet = new HashSet<>();
 
         if (performances != null) {
             performances.forEach((performance) -> {
-                Optional<Salon> salonOptional = salons.stream().filter((salonItem) -> salonItem.getId() == performance.getSalonId()).findFirst();
+                Optional<Salon> salonOptional = salons.stream().filter(salonItem -> salonItem.getId() == performance.getSalonId()).findFirst();
                 if (salonOptional.isPresent()) {
-                    selectedSalons.add(salonOptional.get());
+                    salonHashSet.add(salonOptional.get());
                 }
             });
         }
 
-        return ResponseEntity.ok(selectedSalons.stream().collect(Collectors.toList()));
-
+        List<Salon> selectedSalonList = salonHashSet.stream().collect(Collectors.toList());
+        return ResponseEntity.ok(selectedSalonList);
     }
 
     @GetMapping("/{id}")

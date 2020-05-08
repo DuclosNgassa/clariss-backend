@@ -5,6 +5,7 @@ import com.kmerconsulting.clariss.model.ManagerSalon;
 import com.kmerconsulting.clariss.model.Salon;
 import com.kmerconsulting.clariss.repository.SalonRepository;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,10 @@ public class SalonService {
 
     public List<Salon> findAll() {
         return salonRepository.findAll();
+    }
+
+    public List<Salon> findAllActive() {
+        return salonRepository.findAll().stream().filter(this::isActive).collect(Collectors.toList());
     }
 
     public Salon findById(Long id) {
