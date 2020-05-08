@@ -18,7 +18,7 @@ public abstract class BasisEntity {
 
     @Column(nullable = false)
     @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
-    @JsonFormat(pattern = "YYYY-MM-dd HH:mm")
+    @JsonFormat(pattern = "YYYY-MM-dd HH:mm:ss")
     private LocalDateTime createdAt;
 
     public Long getId() {

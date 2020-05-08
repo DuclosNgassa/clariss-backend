@@ -101,7 +101,7 @@ public class ImageSalonController {
         if (imageSalon == null) {
             return ResponseEntity.notFound().build();
         }
-        imageSalonService.delete(id);
+        imageSalonService.delete(imageSalon);
 
         return ResponseEntity.ok(imageSalon);
     }

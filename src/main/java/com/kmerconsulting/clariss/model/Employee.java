@@ -2,6 +2,8 @@ package com.kmerconsulting.clariss.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 
 @Entity
 public class Employee extends BasisEntity {
@@ -17,6 +19,9 @@ public class Employee extends BasisEntity {
     private String description;
     @Column(length = 255)
     private String picture;
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private GlobalStatus status;
 
     public String getName() {
         return name;
@@ -64,5 +69,13 @@ public class Employee extends BasisEntity {
 
     public void setRating(double rating) {
         this.rating = rating;
+    }
+
+    public GlobalStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(GlobalStatus status) {
+        this.status = status;
     }
 }

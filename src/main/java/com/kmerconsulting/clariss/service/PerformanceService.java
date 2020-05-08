@@ -2,7 +2,6 @@ package com.kmerconsulting.clariss.service;
 
 import com.kmerconsulting.clariss.model.GlobalStatus;
 import com.kmerconsulting.clariss.model.Performance;
-import com.kmerconsulting.clariss.model.User;
 import com.kmerconsulting.clariss.repository.PerformanceRepository;
 import java.util.List;
 import javax.persistence.EntityNotFoundException;
@@ -44,6 +43,10 @@ public class PerformanceService {
 
     public void delete(Long id) {
         performanceRepository.deleteById(id);
+    }
+
+    public boolean isActive(Performance performance) {
+        return performance.getStatus() == GlobalStatus.active;
     }
 
 }

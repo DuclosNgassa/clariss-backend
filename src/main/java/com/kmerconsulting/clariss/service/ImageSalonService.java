@@ -15,6 +15,9 @@ import org.springframework.web.multipart.MultipartFile;
 public class ImageSalonService {
     @Autowired
     ImageSalonRepository imageSalonRepository;
+    @Autowired
+    FileService fileService;
+
     private static String uploadDirectory = System.getProperty("user.dir") + "/upload/imagesSalon";
 
     public ImageSalon save(ImageSalon imageSalon) {
@@ -41,8 +44,10 @@ public class ImageSalonService {
         return imageSalonRepository.findByImageUrl(imageUrl);
     }
 
-    public void delete(Long id) {
-        imageSalonRepository.deleteById(id);
+    public void delete(ImageSalon imageSalon) {
+        imageSalonRepository.deleteById(imageSalon.getId());
+        deleteFile(imageSalon.getImageUrl());
+
     }
 
     public String saveImage(MultipartFile imageFile) throws Exception {
@@ -51,4 +56,9 @@ public class ImageSalonService {
         Files.write(path, bytes);
         return imageFile.getOriginalFilename();
     }
+
+    public void deleteFile(String fileName) {
+        fileService.deleteFile(fileName);
+    }
+
 }

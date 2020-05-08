@@ -1,11 +1,13 @@
 package com.kmerconsulting.clariss.controller;
 
+import com.kmerconsulting.clariss.model.Employee;
 import com.kmerconsulting.clariss.model.GlobalStatus;
+import com.kmerconsulting.clariss.model.ImageSalon;
 import com.kmerconsulting.clariss.model.ManagerSalon;
 import com.kmerconsulting.clariss.model.Performance;
 import com.kmerconsulting.clariss.model.Salon;
-import com.kmerconsulting.clariss.model.User;
-import com.kmerconsulting.clariss.model.UserRole;
+import com.kmerconsulting.clariss.service.EmployeeService;
+import com.kmerconsulting.clariss.service.ImageSalonService;
 import com.kmerconsulting.clariss.service.ManagerSalonService;
 import com.kmerconsulting.clariss.service.PerformanceService;
 import com.kmerconsulting.clariss.service.SalonService;
@@ -19,6 +21,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,10 +43,14 @@ public class SalonController {
     ManagerSalonService managerSalonService;
     @Autowired
     PerformanceService performanceService;
+    @Autowired
+    EmployeeService employeeService;
+    @Autowired
+    ImageSalonService imageSalonService;
 
-    @PostMapping("/user/{userId}")
-    public ResponseEntity<Salon> save(@Valid @RequestBody Salon salon, @PathVariable(value = "userId") Long userId) throws Exception {
-        if (isUserManager(userId)) {
+    @PostMapping("/{managerId}")
+    public ResponseEntity<Salon> save(@Valid @RequestBody Salon salon, @PathVariable(value = "managerId") Long managerId) throws Exception {
+        if (userService.isUserManager(managerId)) {
             salon.setCreatedAt(LocalDateTime.now());
             salon.setViews(0);
             Salon createdSalon = salonService.save(salon);
@@ -51,20 +58,11 @@ public class SalonController {
                 throw new Exception("Error while saving salon");
             }
 
-            saveManagerSalon(userId, createdSalon.getId());
+            saveManagerSalon(managerId, createdSalon.getId());
 
             return ResponseEntity.ok(createdSalon);
         }
-        throw new Exception("The user with the id " + userId + "is not a manager");
-    }
-
-    private void saveManagerSalon(@PathVariable("userId") Long userId, Long salonId) {
-        ManagerSalon managerSalon = new ManagerSalon();
-        managerSalon.setCreatedAt(LocalDateTime.now());
-        managerSalon.setUserId(userId);
-        managerSalon.setSalonId(salonId);
-
-        managerSalonService.save(managerSalon);
+        throw new Exception("The user with the id " + managerId + "is not a manager");
     }
 
     /**
@@ -74,24 +72,32 @@ public class SalonController {
      * @param id
      * @return
      */
-    @PutMapping("/{id}")
-    public ResponseEntity<Salon> update(@PathVariable(value = "id") Long id, @Valid @RequestBody Salon salon) throws Exception {
+    @PutMapping("/{id}/{managerId}")
+    public ResponseEntity<Salon> update(@PathVariable(value = "id") Long id, @PathVariable(value = "managerId") Long managerId, @Valid @RequestBody Salon salon) throws Exception {
         Salon salonFound = salonService.findById(id);
-
-        if (salonFound == null) {
-            throw new Exception("Error while saving salon");
+        if (salonFound == null || !salonService.isActive(salonFound)) {
+            return ResponseEntity.notFound().build();
         }
+
+        List<ManagerSalon> managerSalons = managerSalonService.findByUserId(managerId);
+
+        if (managerSalons == null || !salonService.isUserSalonOwner(salon, managerSalons)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
         salonFound.setAddressId(salon.getAddressId());
         salonFound.setDescription(salon.getDescription());
         salonFound.setEmail(salon.getEmail());
         salonFound.setName(salon.getName());
         salonFound.setPhone(salon.getPhone());
         salonFound.setRating(salon.getRating());
-        salonFound.setStatus(GlobalStatus.active);
         salonFound.setViews(salon.getViews());
-        salonFound.setCreatedAt(salon.getCreatedAt());
 
         Salon updatedSalon = salonService.update(salonFound);
+
+        if (updatedSalon == null) {
+            throw new Exception("Error while updating salon");
+        }
 
         return ResponseEntity.ok(updatedSalon);
     }
@@ -123,7 +129,12 @@ public class SalonController {
             salons.add(salon);
         });
 
-        return ResponseEntity.ok(salons);
+        List<Salon> salonResults = managerSalons.stream()
+                .map(item -> salonService.findById(item.getSalonId()))
+                .filter(salonService::isActive)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(salonResults);
     }
 
     @GetMapping("/performanceUndercategory/{performanceUndercategory}")
@@ -158,26 +169,71 @@ public class SalonController {
     }
 
     /**
-     * This method deletes a salon based on his id
+     * This method deletes (sets status to deleted) a salon based on his id
      *
      * @param id
      * @return
      */
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Salon> delete(@PathVariable(value = "id") Long id) throws Exception {
+    @DeleteMapping("/{id}/{managerId}")
+    public ResponseEntity<Salon> delete(@PathVariable(value = "id") Long id, @PathVariable(value = "managerId") Long managerId) {
         Salon salon = salonService.findById(id);
-        if (salon == null) {
-            throw new Exception("Error while saving salon");
+        if (salon == null || !salonService.isActive(salon)) {
+            return ResponseEntity.notFound().build();
         }
 
-        salonService.delete(id);
+        List<ManagerSalon> managerSalons = managerSalonService.findByUserId(managerId);
+
+        if (managerSalons == null || !salonService.isUserSalonOwner(salon, managerSalons)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        salon.setStatus(GlobalStatus.deleted);
+        salonService.update(salon);
+
+        deletePerformance(id);
+        deleteEmployee(id);
+        deleteImageSalon(id);
+
+        //TODO delete opening time
+
 
         return ResponseEntity.ok(salon);
     }
 
-    private boolean isUserManager(Long userId) {
-        User user = userService.findById(userId);
-        return user != null && user.getRole() == UserRole.manager;
+    private void deleteImageSalon(Long salonId) {
+        List<ImageSalon> imageSalons = imageSalonService.findBySalonId(salonId);
+        imageSalons.stream().forEach(imageSalon -> imageSalonService.deleteFile(imageSalon.getImageUrl()));
+    }
+
+    private void deletePerformance(Long salonId) {
+        List<Performance> performances = performanceService.findBySalonId(salonId);
+        performances.forEach(this::deletePerformance);
+    }
+
+    private void deletePerformance(Performance performance) {
+        performance.setStatus(GlobalStatus.deleted);
+        performanceService.update(performance);
+    }
+
+    private void deleteEmployee(Long salonId) {
+        List<Employee> employees = employeeService.findBySalonId(salonId);
+        employees.forEach(this::deleteEmployee);
+    }
+
+    private void deleteEmployee(Employee employee) {
+        employee.setStatus(GlobalStatus.deleted);
+        employeeService.update(employee);
+        employeeService.deleteFile(employee.getPicture());
+
+    }
+
+    private void saveManagerSalon(Long userId, Long salonId) {
+        ManagerSalon managerSalon = new ManagerSalon();
+        managerSalon.setCreatedAt(LocalDateTime.now());
+        managerSalon.setUserId(userId);
+        managerSalon.setSalonId(salonId);
+
+        managerSalonService.save(managerSalon);
     }
 
 }

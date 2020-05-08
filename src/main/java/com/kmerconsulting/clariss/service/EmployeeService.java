@@ -1,6 +1,7 @@
 package com.kmerconsulting.clariss.service;
 
 import com.kmerconsulting.clariss.model.Employee;
+import com.kmerconsulting.clariss.model.GlobalStatus;
 import com.kmerconsulting.clariss.repository.EmployeeRepository;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -15,6 +16,9 @@ import org.springframework.web.multipart.MultipartFile;
 public class EmployeeService {
     @Autowired
     EmployeeRepository employeeRepository;
+    @Autowired
+    FileService fileService;
+
     private static String uploadDirectory = System.getProperty("user.dir") + "/upload/employeeProfilPicture";
 
     public Employee save(Employee employee) {
@@ -46,6 +50,14 @@ public class EmployeeService {
         Path path = Paths.get(uploadDirectory, profilPicture.getOriginalFilename());
         Files.write(path, bytes);
         return profilPicture.getOriginalFilename();
+    }
+
+    public void deleteFile(String fileName) {
+        fileService.deleteFile(fileName);
+    }
+
+    public boolean isActive(Employee employee) {
+        return employee.getStatus() == GlobalStatus.active;
     }
 
 }

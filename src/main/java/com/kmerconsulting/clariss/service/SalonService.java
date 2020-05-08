@@ -1,5 +1,8 @@
 package com.kmerconsulting.clariss.service;
 
+import com.kmerconsulting.clariss.model.GlobalStatus;
+import com.kmerconsulting.clariss.model.ManagerSalon;
+import com.kmerconsulting.clariss.model.Performance;
 import com.kmerconsulting.clariss.model.Salon;
 import com.kmerconsulting.clariss.repository.SalonRepository;
 import java.util.List;
@@ -30,6 +33,14 @@ public class SalonService {
 
     public void delete(Long id) {
         salonRepository.deleteById(id);
+    }
+
+    public boolean isActive(Salon salon) {
+        return salon.getStatus() == GlobalStatus.active;
+    }
+
+    public boolean isUserSalonOwner(Salon salon, List<ManagerSalon> managerSalons) {
+        return managerSalons.stream().anyMatch(managerSalon -> managerSalon.getSalonId().equals(salon.getId()));
     }
 
 }

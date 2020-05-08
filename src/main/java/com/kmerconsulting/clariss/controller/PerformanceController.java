@@ -1,12 +1,18 @@
 package com.kmerconsulting.clariss.controller;
 
 import com.kmerconsulting.clariss.model.GlobalStatus;
+import com.kmerconsulting.clariss.model.ManagerSalon;
 import com.kmerconsulting.clariss.model.Performance;
+import com.kmerconsulting.clariss.model.Salon;
+import com.kmerconsulting.clariss.service.ManagerSalonService;
 import com.kmerconsulting.clariss.service.PerformanceService;
+import com.kmerconsulting.clariss.service.SalonService;
+import com.kmerconsulting.clariss.service.UserService;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,9 +29,26 @@ public class PerformanceController {
 
     @Autowired
     PerformanceService performanceService;
+    @Autowired
+    ManagerSalonService managerSalonService;
+    @Autowired
+    SalonService salonService;
+    @Autowired
+    UserService userService;
 
-    @PostMapping()
-    public ResponseEntity<Performance> save(@Valid @RequestBody Performance performance) throws Exception {
+    @PostMapping("/{managerId}")
+    public ResponseEntity<Performance> save(@Valid @RequestBody Performance performance, @PathVariable(value = "managerId") Long managerId) throws Exception {
+        Salon salon = salonService.findById(performance.getSalonId());
+        if (salon == null || !salonService.isActive(salon)) {
+            return ResponseEntity.notFound().build();
+        }
+
+        List<ManagerSalon> managerSalons = managerSalonService.findByUserId(managerId);
+
+        if (managerSalons == null || !salonService.isUserSalonOwner(salon, managerSalons)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
         performance.setStatus(GlobalStatus.active);
         Performance createdPerformance = performanceService.save(performance);
 
@@ -58,10 +81,6 @@ public class PerformanceController {
         return ResponseEntity.ok(performances);
     }
 
-    private boolean isActive(Performance performance) {
-        return performance.getStatus() == GlobalStatus.active;
-    }
-
     @GetMapping("/{id}")
     public ResponseEntity<Performance> findById(@PathVariable(value = "id") Long id) {
         Performance performance = performanceService.findById(id);
@@ -79,7 +98,7 @@ public class PerformanceController {
             return ResponseEntity.notFound().build();
         }
 
-        List<Performance> performancesActive = performances.stream().filter(this::isActive).collect(Collectors.toList());
+        List<Performance> performancesActive = performances.stream().filter(performanceService::isActive).collect(Collectors.toList());
         return ResponseEntity.ok(performancesActive);
     }
 
@@ -89,7 +108,7 @@ public class PerformanceController {
         if (performances == null) {
             return ResponseEntity.notFound().build();
         }
-        List<Performance> performancesActive = performances.stream().filter(this::isActive).collect(Collectors.toList());
+        List<Performance> performancesActive = performances.stream().filter(performanceService::isActive).collect(Collectors.toList());
         return ResponseEntity.ok(performancesActive);
     }
 
@@ -100,11 +119,22 @@ public class PerformanceController {
      * @param id
      * @return
      */
-    @PutMapping("/{id}")
-    public ResponseEntity<Performance> update(@PathVariable(value = "id") Long id, @Valid @RequestBody Performance performanceDetail) {
+    @PutMapping("/{id}/{managerId}")
+    public ResponseEntity<Performance> update(@PathVariable(value = "id") Long id, @PathVariable(value = "managerId") Long managerId, @Valid @RequestBody Performance performanceDetail) {
         Performance performance = performanceService.findById(id);
-        if (performance == null || !isActive(performance)) {
+        if (performance == null || !performanceService.isActive(performance)) {
             return ResponseEntity.notFound().build();
+        }
+
+        Salon salonFound = salonService.findById(performance.getSalonId());
+        if (salonFound == null || !salonService.isActive(salonFound)) {
+            return ResponseEntity.notFound().build();
+        }
+
+        List<ManagerSalon> managerSalons = managerSalonService.findByUserId(managerId);
+
+        if (managerSalons == null || !salonService.isUserSalonOwner(salonFound, managerSalons)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
         performance.setDescription(performanceDetail.getDescription());
@@ -127,15 +157,29 @@ public class PerformanceController {
      * @param id
      * @return
      */
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Performance> delete(@PathVariable(value = "id") Long id) {
+    @DeleteMapping("/{id}/{managerId}")
+    public ResponseEntity<Performance> delete(@PathVariable(value = "id") Long id, @PathVariable(value = "managerId") Long managerId) {
+
         Performance performance = performanceService.findById(id);
-        if (performance == null || !isActive(performance)) {
+        if (performance == null || !performanceService.isActive(performance)) {
             return ResponseEntity.notFound().build();
         }
+
+        Salon salon = salonService.findById(performance.getSalonId());
+        if (salon == null || !salonService.isActive(salon)) {
+            return ResponseEntity.notFound().build();
+        }
+
+        List<ManagerSalon> managerSalons = managerSalonService.findByUserId(managerId);
+
+        if (managerSalons == null || !salonService.isUserSalonOwner(salon, managerSalons)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
         performance.setStatus(GlobalStatus.deleted);
         performanceService.update(performance);
 
         return ResponseEntity.ok(performance);
     }
+
 }
