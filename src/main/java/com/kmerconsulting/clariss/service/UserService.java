@@ -1,7 +1,6 @@
 package com.kmerconsulting.clariss.service;
 
 import com.kmerconsulting.clariss.model.GlobalStatus;
-import com.kmerconsulting.clariss.model.Performance;
 import com.kmerconsulting.clariss.model.Salon;
 import com.kmerconsulting.clariss.model.User;
 import com.kmerconsulting.clariss.model.UserRole;

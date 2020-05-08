@@ -14,12 +14,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class EmployeeService {
+    private static String uploadDirectory = System.getProperty("user.dir") + "/upload/employeeProfilPicture";
     @Autowired
     EmployeeRepository employeeRepository;
     @Autowired
     FileService fileService;
-
-    private static String uploadDirectory = System.getProperty("user.dir") + "/upload/employeeProfilPicture";
 
     public Employee save(Employee employee) {
         return employeeRepository.save(employee);

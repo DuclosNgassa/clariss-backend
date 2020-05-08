@@ -13,12 +13,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class ImageSalonService {
+    private static String uploadDirectory = System.getProperty("user.dir") + "/upload/imagesSalon";
     @Autowired
     ImageSalonRepository imageSalonRepository;
     @Autowired
     FileService fileService;
-
-    private static String uploadDirectory = System.getProperty("user.dir") + "/upload/imagesSalon";
 
     public ImageSalon save(ImageSalon imageSalon) {
         return imageSalonRepository.save(imageSalon);
