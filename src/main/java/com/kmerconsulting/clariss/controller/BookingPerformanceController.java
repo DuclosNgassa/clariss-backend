@@ -78,8 +78,8 @@ public class BookingPerformanceController {
         return ResponseEntity.ok(bookingPerformance);
     }
 
-    @GetMapping("/bookingId/{bookingId}")
-    public ResponseEntity<List<BookingPerformance>> findByBookingId(Long bookingId) {
+    @GetMapping("/booking/{bookingId}")
+    public ResponseEntity<List<BookingPerformance>> findByBookingId(@PathVariable(value = "bookingId") Long bookingId) {
         List<BookingPerformance> bookingPerformancees = bookingPerformanceService.findByBookingId(bookingId);
         if (bookingPerformancees == null) {
             return ResponseEntity.notFound().build();
@@ -88,8 +88,8 @@ public class BookingPerformanceController {
         return ResponseEntity.ok(bookingPerformancees);
     }
 
-    @GetMapping("/performanceId/{performanceId}")
-    public ResponseEntity<List<BookingPerformance>> findByPerformanceId(Long performanceId) {
+    @GetMapping("/performance/{performanceId}")
+    public ResponseEntity<List<BookingPerformance>> findByPerformanceId(@PathVariable(value = "performanceId") Long performanceId) {
         List<BookingPerformance> bookingPerformancees = bookingPerformanceService.findByPerformanceId(performanceId);
         if (bookingPerformancees == null) {
             return ResponseEntity.notFound().build();

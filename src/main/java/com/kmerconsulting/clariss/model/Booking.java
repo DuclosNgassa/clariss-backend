@@ -10,10 +10,10 @@ import org.springframework.format.annotation.DateTimeFormat;
 public class Booking extends BasisEntity {
     @Column(nullable = false)
     @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
-    @JsonFormat(pattern = "YYYY-MM-dd HH:mm")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime performanceDate;
     @Column(nullable = false, length = 300)
-    private String comment;
+    private String note;
     @Column(nullable = false)
     private Long userId;
     @Column(nullable = false)
@@ -27,12 +27,12 @@ public class Booking extends BasisEntity {
         this.performanceDate = performanceDate;
     }
 
-    public String getComment() {
-        return comment;
+    public String getNote() {
+        return note;
     }
 
-    public void setComment(String comment) {
-        this.comment = comment;
+    public void setNote(String note) {
+        this.note = note;
     }
 
     public Long getUserId() {

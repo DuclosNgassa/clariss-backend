@@ -1,6 +1,7 @@
 package com.kmerconsulting.clariss.controller;
 
 import com.kmerconsulting.clariss.model.Booking;
+import com.kmerconsulting.clariss.service.BookingPerformanceService;
 import com.kmerconsulting.clariss.service.BookingService;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -22,6 +23,8 @@ public class BookingController {
 
     @Autowired
     BookingService bookingService;
+    @Autowired
+    BookingPerformanceService bookingPerformanceService;
 
     @PostMapping()
     public ResponseEntity<Booking> save(@Valid @RequestBody Booking booking) throws Exception {
@@ -90,7 +93,7 @@ public class BookingController {
             return ResponseEntity.notFound().build();
         }
 
-        booking.setComment(bookingDetail.getComment());
+        booking.setNote(bookingDetail.getNote());
         booking.setAddressId(bookingDetail.getAddressId());
         booking.setPerformanceDate(bookingDetail.getPerformanceDate());
         booking.setUserId(bookingDetail.getUserId());
@@ -116,4 +119,5 @@ public class BookingController {
 
         return ResponseEntity.ok(booking);
     }
+
 }
