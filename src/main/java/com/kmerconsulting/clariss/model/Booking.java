@@ -17,6 +17,8 @@ public class Booking extends BasisEntity {
     @Column(nullable = false)
     private Long userId;
     @Column(nullable = false)
+    private Long salonId;
+    @Column(nullable = false)
     private Long addressId;
 
     public LocalDateTime getPerformanceDate() {
@@ -41,6 +43,14 @@ public class Booking extends BasisEntity {
 
     public void setUserId(Long userId) {
         this.userId = userId;
+    }
+
+    public Long getSalonId() {
+        return salonId;
+    }
+
+    public void setSalonId(Long salonId) {
+        this.salonId = salonId;
     }
 
     public Long getAddressId() {

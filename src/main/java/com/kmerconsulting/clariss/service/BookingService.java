@@ -35,20 +35,7 @@ public class BookingService {
     }
 
     public List<Booking> findBySalonId(Long salonId) {
-        List<Performance> salonPerformances = performanceService.findBySalonId(salonId);
-        Set<Long> bookingIds = new HashSet<>();
-        salonPerformances.forEach((performance -> {
-            List<BookingPerformance> bookingPerformances = bookingPerformanceService.findByPerformanceId(performance.getId());
-            bookingPerformances.stream().map((item) -> bookingIds.add(item.getBookingId()));
-        }));
-
-        List<Booking> bookings = bookingIds.stream()
-                .map(bookingRepository::findById)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .collect(Collectors.toList());
-
-        return bookings;
+        return bookingRepository.findBySalonId(salonId);
     }
 
     public List<Booking> findByUserId(Long userId) {

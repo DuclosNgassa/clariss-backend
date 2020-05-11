@@ -97,6 +97,7 @@ public class BookingController {
         booking.setAddressId(bookingDetail.getAddressId());
         booking.setPerformanceDate(bookingDetail.getPerformanceDate());
         booking.setUserId(bookingDetail.getUserId());
+        booking.setSalonId(bookingDetail.getSalonId());
 
         Booking updatedBooking = bookingService.update(booking);
 
